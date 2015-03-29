@@ -35,3 +35,11 @@ The screen will clear, and possibly still show your login prompt.  Send UDP pack
 - UDP packet protocol to get value of framebuffer color at a given x, y
 - filters?
 - accept more than one pixel at a time maybe?
+
+## Thanks
+
+Many thanks to @blueskymonster and @peterkhayes for their contributions at DadaConf to the MVP of this project, [divflood](http://github.com/peterkhayes/divflood).  I am also indebted to @kaey's [framebuffer](https://github.com/kaey/framebuffer) library, which saved me tons of time with low-level framebuffer device hacking.  I hope to send commits back everyone's way!  :cake: :sparkles:
+
+## Contributions
+
+Contributions are totally welcome, but be aware that the overall design of this project is still in heavy flux.
