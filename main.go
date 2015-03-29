@@ -28,7 +28,9 @@ func handleMessage(fb *framebuffer.Framebuffer, msg string) {
 }
 
 
-func myUDPServer(fb *framebuffer.Framebuffer) {
+func myUDPServer(messages chan string) {
+    fmt.Println("opening UDP server")
+
     LISTENING_IP := "0.0.0.0"
     LISTENING_PORT := 6668
 
@@ -55,7 +57,7 @@ func myUDPServer(fb *framebuffer.Framebuffer) {
 
         if address != nil {
             if rlen > 0 {
-                go handleMessage(fb, string(buf[0:rlen]))
+                messages <- string(buf[0:rlen])
             }
         }
      }
@@ -65,6 +67,13 @@ func SendColor(fb *framebuffer.Framebuffer, x_coord int, y_coord int, red int, g
     fb.WritePixel(x_coord, y_coord, red, green, blue, 255)
 }
 
+func handleScreen(fb *framebuffer.Framebuffer, messages chan string) {
+    fb.Clear(0, 0, 0, 0)
+    for {
+        msg := <- messages
+        handleMessage(fb, msg)
+    }
+}
 
 func main() {
 	fb, err := framebuffer.Init("/dev/fb0")
@@ -72,6 +81,9 @@ func main() {
 		log.Fatalln(err)
 	}
 	defer fb.Close()
-	fb.Clear(0, 0, 0, 0)
-        myUDPServer(fb)
+
+        messages := make(chan string, 10000)
+
+        go myUDPServer(messages)
+        handleScreen(fb, messages)
 }
