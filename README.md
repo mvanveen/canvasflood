@@ -28,8 +28,10 @@ The screen will clear, and possibly still show your login prompt.  Send UDP pack
 
 ## TODOs
 
+- change packet format to something cleaner (fewer bytes)
 - error handling (:warning: this is really important, current daemon is hell of fragile)
 - resize framebuffer
 - JSON API for metadata about screen width/height, stats, etc.
 - UDP packet protocol to get value of framebuffer color at a given x, y
 - filters?
+- accept more than one pixel at a time maybe?
