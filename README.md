@@ -5,6 +5,8 @@ Send fire-and-forget UDP packets to an IP with (x, y, red, green, blue) and canv
 
 ## Compilation
 
+Make sure your `GOPATH` is set.  I do `export GOPATH=$(pwd)` when I'm running in this working directory, but I'm not sure if that's kosher golang yet.  This env variable is needed to compile.
+
 ```shell
 $ go get .
 $ go build .
