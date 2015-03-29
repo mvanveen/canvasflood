@@ -1,20 +1,34 @@
 package main
 
-import "fmt"
-import "net"
-import "strings"
+import (
+	"fmt"
+        "net"
+	"log"
+        "strings"
+        "strconv"
 
-func handleMessage(msg string) {
-   parts := strings.SplitN(msg, " ", 3)
-   x_coord := parts[0]
-   y_coord := parts[1]
-   color := strings.TrimSpace(parts[2])
+	"github.com/kaey/framebuffer"
+)
+
+
+func handleMessage(fb *framebuffer.Framebuffer, msg string) {
+   parts := strings.SplitN(msg, " ", 5)
+
+   x_coord, _ := strconv.Atoi(parts[0])
+   y_coord, _ := strconv.Atoi(parts[1])
+
+   red , _ := strconv.Atoi(parts[2])
+   blue , _ := strconv.Atoi(parts[3])
+   green , _ := strconv.Atoi(parts[4])
+
+   SendColor(fb, x_coord, y_coord, red, blue, green)
 
    // send message to channel to incrememnt color
-   fmt.Println("got message: (", x_coord, ", ", y_coord, ") ", color)
+   fmt.Println("got message: (", x_coord, ", ", y_coord, ") ", red, blue, green)
 }
 
-func myUDPServer() {
+
+func myUDPServer(fb *framebuffer.Framebuffer) {
     LISTENING_IP := "0.0.0.0"
     LISTENING_PORT := 6668
 
@@ -41,12 +55,23 @@ func myUDPServer() {
 
         if address != nil {
             if rlen > 0 {
-                go handleMessage(string(buf[0:rlen]))
+                go handleMessage(fb, string(buf[0:rlen]))
             }
         }
      }
 }
 
+func SendColor(fb *framebuffer.Framebuffer, x_coord int, y_coord int, red int, green int, blue int) {
+    fb.WritePixel(x_coord, y_coord, red, green, blue, 255)
+}
+
+
 func main() {
-    myUDPServer()
+	fb, err := framebuffer.Init("/dev/fb0")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer fb.Close()
+	fb.Clear(0, 0, 0, 0)
+        myUDPServer(fb)
 }
