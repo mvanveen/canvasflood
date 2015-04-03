@@ -23,7 +23,6 @@ func handleMessage(fb *framebuffer.Framebuffer, msg string, ip string, conn *net
 
 
    if cmd == "get" {
-      //sendResponse()
       host := net.UDPAddr{
           Port: 6668,
           IP: net.ParseIP(ip),
@@ -34,7 +33,6 @@ func handleMessage(fb *framebuffer.Framebuffer, msg string, ip string, conn *net
 
       color := fb.GetPixel(x_coord, y_coord)
       response := fmt.Sprintf("%d %d %d %d %d", x_coord, y_coord, color[0], color[1], color[2])
-
       conn.WriteToUDP([]byte(response), &host)
 
    } else {
