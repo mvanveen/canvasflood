@@ -21,8 +21,6 @@ func handleMessage(fb *framebuffer.Framebuffer, msg string, ip string, conn *net
 
    cmd := parts[0]
 
-   x_coord, _ := strconv.Atoi(parts[1])
-   y_coord, _ := strconv.Atoi(parts[2])
 
    if cmd == "get" {
       //sendResponse()
@@ -31,6 +29,9 @@ func handleMessage(fb *framebuffer.Framebuffer, msg string, ip string, conn *net
           IP: net.ParseIP(ip),
       }
 
+      x_coord, _ := strconv.Atoi(parts[1])
+      y_coord, _ := strconv.Atoi(parts[2])
+
       color := fb.GetPixel(x_coord, y_coord)
       response := fmt.Sprintf("%d %d %d %d %d", x_coord, y_coord, color[0], color[1], color[2])
 
@@ -38,12 +39,12 @@ func handleMessage(fb *framebuffer.Framebuffer, msg string, ip string, conn *net
 
    } else {
 
-      x_coord, _ := strconv.Atoi(parts[0])
-      y_coord, _ := strconv.Atoi(parts[1])
+      x_coord, _ := strconv.Atoi(parts[1])
+      y_coord, _ := strconv.Atoi(parts[2])
 
-      red, _ := strconv.Atoi(parts[2])
-      green, _ := strconv.Atoi(parts[3])
-      blue, _ := strconv.Atoi(parts[4])
+      red, _ := strconv.Atoi(parts[3])
+      green, _ := strconv.Atoi(parts[4])
+      blue, _ := strconv.Atoi(parts[5])
 
       SendColor(fb, x_coord, y_coord, red, blue, green)
    }
@@ -71,15 +72,15 @@ func myUDPServer(messages chan message_from) {
 
     for {
         rlen, address, err := conn.ReadFromUDP(buf)
+
         if err != nil {
             fmt.Println("error reading data from connection")
             fmt.Println(err)
             return
         }
-
         if address != nil {
             if rlen > 0 {
-                messages <- message_from{string(buf[0:rlen]), address.String(), conn}
+                messages <- message_from{string(buf[0:rlen]), address.IP.String(), conn}
             }
         }
      }
