@@ -2,7 +2,7 @@
 
 ![](https://d262ilb51hltx0.cloudfront.net/max/800/1*EF6345fgkxdMAU3EuZHj0Q.gif)
 
-Send fire-and-forget UDP packets to an IP with (x, y, red, green, blue) and canvasflood will dutifully display it into the raw linux framebuffer!
+Send fire-and-forget UDP packets to an IP with `set x y red green blue` and canvasflood will dutifully display it into the raw linux framebuffer!
 
 
 ## Compilation
