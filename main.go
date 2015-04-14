@@ -18,7 +18,6 @@ type message_from struct {
 
 func handleMessage(fb *framebuffer.Framebuffer, msg string, ip string, conn *net.UDPConn) {
    parts := strings.SplitN(msg, " ", 6)
-
    cmd := parts[0]
 
 
@@ -44,7 +43,7 @@ func handleMessage(fb *framebuffer.Framebuffer, msg string, ip string, conn *net
       green, _ := strconv.Atoi(parts[4])
       blue, _ := strconv.Atoi(parts[5])
 
-      SendColor(fb, x_coord, y_coord, red, blue, green)
+      SendColor(fb, x_coord, y_coord, red, green, blue)
    }
 }
 
@@ -66,7 +65,7 @@ func myUDPServer(messages chan message_from) {
         panic(err)
     }
 
-    var buf []byte = make([]byte, 1500)
+    var buf []byte = make([]byte, 3000)
 
     for {
         rlen, address, err := conn.ReadFromUDP(buf)
@@ -76,6 +75,7 @@ func myUDPServer(messages chan message_from) {
             fmt.Println(err)
             return
         }
+
         if address != nil {
             if rlen > 0 {
                 messages <- message_from{string(buf[0:rlen]), address.IP.String(), conn}
